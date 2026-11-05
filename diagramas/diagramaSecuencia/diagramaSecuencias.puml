@@ -1,41 +1,25 @@
-@startuml
-skinparam shadowing false
-skinparam sequenceMessageAlign left
-skinparam ParticipantPadding 20
-skinparam sequence {
-  ArrowColor black
-  LifeLineBorderColor gray
-  LifeLineBackgroundColor white
-  ParticipantBackgroundColor #ECECFF
-  ParticipantBorderColor #9B9BC8
-  GroupBorderColor black
-  GroupBackgroundColor white
-}
+    participant Estudiante
+    participant Sistema
+    participant Inscripcion
+    participant Acreditacion
+    participant Secretaria
 
-participant Estudiante
-participant Sistema
-participant "Inscripcion" as Inscripcion
-participant Acreditacion
-participant Secretaria
+    Estudiante -> Sistema : solicitarAcreditacion(estudiante)
+    Sistema -> Sistema : total = 0, i = 0
 
-Estudiante -> Sistema : solicitarAcreditacion(estudiante)
-Sistema -> Sistema : total = 0, i = 0
+    loop mientras i < inscripciones.size()
+        Sistema -> Inscripcion : getCreditos(i)
+        Inscripcion --> Sistema : creditos
+        Sistema -> Sistema : total += creditos
+        Sistema -> Sistema : i++
+    end
 
-loop mientras i < inscripciones.size()
-    Sistema -> Inscripcion : getCreditos(i)
-    Inscripcion --> Sistema : creditos
-    Sistema -> Sistema : total += creditos
-    Sistema -> Sistema : i++
-end
-
-alt total >= 6
-    Sistema -> Acreditacion : crear(estudiante, total)
-    Acreditacion --> Sistema : retorno
-    Sistema -> Secretaria : notificarSolicitud(acreditacion)
-    Secretaria --> Sistema : retorno
-    Sistema --> Estudiante : solicitud registrada
-else total < 6
-    Sistema --> Estudiante : faltan (6 - total) créditos
-end
-
-@enduml
+    alt total >= 6
+        Sistema -> Acreditacion : crear(estudiante, total)
+        Acreditacion --> Sistema : retorno
+        Sistema -> Secretaria : notificarSolicitud(acreditacion)
+        Secretaria --> Sistema : retorno
+        Sistema --> Estudiante : solicitud registrada
+    else total < 6
+        Sistema --> Estudiante : faltan (6 - total) créditos
+    end
