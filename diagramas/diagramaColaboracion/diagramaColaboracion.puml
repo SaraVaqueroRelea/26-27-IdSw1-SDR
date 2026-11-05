@@ -1,0 +1,63 @@
+@startuml
+allowmixing
+
+title Gestión de actividades extracurriculares
+left to right direction
+
+' CONFIGURACIÓN VISUAL
+skinparam linetype ortho
+skinparam shadowing false
+skinparam nodesep 90
+skinparam ranksep 110
+skinparam defaultFontSize 14
+skinparam ArrowFontSize 13
+skinparam object {
+  BackgroundColor #EAF2F8
+  BorderColor #2471A3
+}
+
+' ACTORES
+actor "Titular" as AT
+actor "Alumno" as AA
+
+' OBJETOS
+object "titular:TitularOrganizacion" as T
+object "registro:RegistroActividad" as R
+object "actividad:ActividadExtraescolar" as AC
+object "alumno:Alumno" as A
+object "organizacion:Organizacion" as O
+
+' REGISTRO Y ACREDITACIÓN
+AT -right-> T : 1, 2
+T -right-> R : 2.1
+R -right-> AC : 2.2
+
+' ASOCIACIÓN AL HISTORIAL
+T -down-> A : 2.3
+
+' CONSULTAS DEL ALUMNO
+AA -right-> A : 3, 4
+A -right-> R : 3.1, 4.1
+
+' ORGANIZACIÓN QUE OFRECE ACTIVIDADES
+O -up- AC : ofrece
+
+' DESCRIPCIÓN DE LOS MENSAJES
+legend bottom
+  <b>MENSAJES DE COLABORACIÓN</b>
+
+  1     registrarActividad(actividad)
+  2     cargarAcreditacionAlumno(...)
+  2.1   crear RegistroActividad
+  2.2   consultar categoría y curso de la actividad
+  2.3   asociar registro al historial del alumno
+  3     consultarHistorialFiltrado(curso, categoria)
+  3.1   obtenerCategoria() / obtenerCursoAcademico()
+  4     calcularECTSPorCategoria(categoria)
+  4.1   consultar creditosOtorgados
+
+  <b>Validación interna:</b>
+  RegistroActividad.validarRequisitosReglamento()
+endlegend
+
+@enduml
