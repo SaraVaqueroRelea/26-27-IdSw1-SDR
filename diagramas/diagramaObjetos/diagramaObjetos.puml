@@ -1,0 +1,94 @@
+
+@startuml
+
+object "alumno1: Alumno" as alumno1 {
+  id = "U001"
+  nombre = "Laura"
+  apellidos = "García López"
+  email = "laura@universidad.es"
+  dni = "12345678A"
+  expediente = "EXP2026"
+  grado = "Ingeniería Informática"
+}
+
+object "titular1: TitularOrganizacion" as titular1 {
+  id = "T001"
+  nombre = "Carlos"
+  apellidos = "Martínez Ruiz"
+  email = "carlos@universidad.es"
+  cargo = "Coordinador"
+  departamento = "Deportes"
+}
+
+object "titular2: TitularOrganizacion" as titular2 {
+  id = "T002"
+  nombre = "Ana"
+  apellidos = "Sánchez Pérez"
+  email = "ana@universidad.es"
+  cargo = "Responsable"
+  departamento = "Cultura"
+}
+
+object "organizacion1: Organizacion" as organizacion1 {
+  id = "ORG001"
+  nombre = "Universidad Europea"
+  esExterna = false
+}
+
+object "actividad1: ActividadExtraescolar" as actividad1 {
+  id = "ACT001"
+  titulo = "Torneo de fútbol"
+  descripcion = "Participación en torneo universitario"
+  cursoAcademico = "2025-2026"
+  horasLectivas = 20
+  categoria = DEPORTIVAS
+}
+
+object "actividad2: ActividadExtraescolar" as actividad2 {
+  id = "ACT002"
+  titulo = "Voluntariado social"
+  descripcion = "Colaboración en actividades solidarias"
+  cursoAcademico = "2025-2026"
+  horasLectivas = 15
+  categoria = SOLIDARIAS_Y_COOPERACION
+}
+
+object "registro1: RegistroActividad" as registro1 {
+  id = "REG001"
+  fechaEmision = "15/06/2026"
+  rolDesempenado = "Participante"
+  horasAcreditadas = 20
+  porcentajeAsistencia = 100.0
+  creditosOtorgados = 0.5
+  certificadoUrl = "certificados/REG001.pdf"
+}
+
+object "registro2: RegistroActividad" as registro2 {
+  id = "REG002"
+  fechaEmision = "20/06/2026"
+  rolDesempenado = "Voluntaria"
+  horasAcreditadas = 15
+  porcentajeAsistencia = 90.0
+  creditosOtorgados = 0.3
+  certificadoUrl = "certificados/REG002.pdf"
+}
+
+organizacion1 -- titular1
+organizacion1 -- titular2
+
+organizacion1 -- actividad1
+organizacion1 -- actividad2
+
+titular1 -- actividad1
+titular2 -- actividad2
+
+titular1 -- registro1
+titular2 -- registro2
+
+alumno1 -- registro1
+alumno1 -- registro2
+
+actividad1 -- registro1
+actividad2 -- registro2
+
+@enduml
