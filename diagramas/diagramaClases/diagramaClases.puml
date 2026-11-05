@@ -1,30 +1,84 @@
+@startuml
 
-    class Usuario {
+enum CategoriaCredito {
+  ACTIVIDADES_UNIVERSITARIAS
+  COMPETENCIAS_IDIOMATICAS
+  CULTURALES
+  DEPORTIVAS
+  REPRESENTACION_ESTUDIANTIL
+  SOLIDARIAS_Y_COOPERACION
+}
 
-    }
+abstract class Usuario {
+  # id: String
+  # nombre: String
+  # apellidos: String
+  # email: String
+  # contrasena: String
+  + iniciarSesion(): Boolean
+  + cerrarSesion(): Void
+}
 
-    class Secretaria {
+class Alumno {
+  - dni: String
+  - expediente: String
+  - grado: String
+  + consultarHistorialCompleto(): List<RegistroActividad>
+  + consultarHistorialPorCurso(curso: String): List<RegistroActividad>
+  + consultarHistorialPorCategoria(categoria: CategoriaCredito): List<RegistroActividad>
+  + consultarHistorialFiltrado(curso: String, categoria: CategoriaCredito): List<RegistroActividad>
+  + calcularTotalECTS(): Float
+  + calcularECTSPorCategoria(categoria: CategoriaCredito): Float
+}
 
-    }
+class TitularOrganizacion {
+  - cargo: String
+  - departamento: String
+  + registrarActividad(actividad: ActividadExtraescolar): Void
+  + cargarAcreditacionAlumno(alumno: Alumno, actividad: ActividadExtraescolar, rol: String, horas: Int, asistencia: Float, ects: Float): RegistroActividad
+}
 
-    class Actividad {
+class Organizacion {
+  - id: String
+  - nombre: String
+  - esExterna: Boolean
+}
 
-    }
+class ActividadExtraescolar {
+  - id: String
+  - titulo: String
+  - descripcion: String
+  - cursoAcademico: String
+  - horasLectivas: Int
+  - categoria: CategoriaCredito
+  + getCategoria(): CategoriaCredito
+  + getCursoAcademico(): String
+}
 
-    class Inscripcion {
+class RegistroActividad {
+  - id: String
+  - fechaEmision: Date
+  - rolDesempenado: String
+  - horasAcreditadas: Int
+  - porcentajeAsistencia: Float
+  - creditosOtorgados: Float
+  - certificadoUrl: String
+  + obtenerCategoria(): CategoriaCredito
+  + obtenerCursoAcademico(): String
+  + validarRequisitosReglamento(): Boolean
+}
 
-    }
+' Relaciones entre clases
+Usuario <|-- Alumno
+Usuario <|-- TitularOrganizacion
 
-    class Acreditacion {
+Organizacion "1" -- "1..*" TitularOrganizacion : asigna >
+Organizacion "1" -- "0..*" ActividadExtraescolar : ofrece >
 
-    }
+TitularOrganizacion "1" -- "0..*" ActividadExtraescolar : gestiona >
+TitularOrganizacion "1" -- "0..*" RegistroActividad : certifica / carga >
 
-    Usuario <|-- Estudiante : Es un
-    Usuario <|-- Secretaria : Es un
+Alumno "1" -- "0..*" RegistroActividad : posee en historial >
+ActividadExtraescolar "1" -- "0..*" RegistroActividad : origina >
 
-    Estudiante "1" -- "0.." Inscripcion : realiza >
-    Actividad "1" -- "0.." Inscripcion : oferta >
-    Inscripcion "1" -- "0..1" Acreditacion : genera >
-    Secretaria "1" -- "0.." Actividad : administra >
-    Secretaria "1" -- "0.." Estudiante : supervisa expediente >
-﻿
+@enduml
