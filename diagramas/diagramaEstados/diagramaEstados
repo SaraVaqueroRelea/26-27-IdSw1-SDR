@@ -1,5 +1,5 @@
 @startuml
-title  Gestión de actividades extracurriculares
+title Gestión de actividades extracurriculares
 
 hide empty description
 
@@ -7,29 +7,28 @@ hide empty description
 
 state "Actividad no registrada" as NoRegistrada
 state "Actividad registrada" as Registrada
-state "Pendiente de acreditación" as Pendiente
-state "Acreditación cargada" as Cargada
-state "Validación" as Validacion
+state "Alumno participa en actividad" as Participa
+state "Acreditación solicitada" as Solicitada
+state "A validar por secretaría" as Validacion
 state "Acreditación válida" as Valida
 state "Acreditación no válida" as NoValida
 state "Créditos ECTS acreditados" as Acreditada
 
-NoRegistrada --> Registrada : Titular registra actividad
+NoRegistrada --> Registrada : Organizador registra actividad
 
-Registrada --> Pendiente : Alumno participa en actividad
+Registrada --> Participa : Alumno participa en actividad
 
-Pendiente --> Cargada : Titular carga acreditación\n(rol, horas, asistencia, créditos ECTS)
+Participa --> Solicitada : Alumno solicita acreditación
 
-Cargada --> Validacion : Validar requisitos del reglamento
+Solicitada --> Validacion : Secretarío valida solicitud
 
 Validacion --> Valida : [Cumple requisitos] \t\t\t
 
-Validacion --> NoValida : [No cumple requisitos]
+Validacion --> NoValida : [No cumple requisitos] \t\t\t
 
-Valida --> Acreditada : Incorporar registro al historial\t\t\t
+Valida --> Acreditada : Incorporar registro al historial
 
 NoValida --> [*] : Acreditación no reconocida
-
 Acreditada --> [*]
 
 note right of Registrada
