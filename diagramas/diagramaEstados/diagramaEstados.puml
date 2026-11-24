@@ -22,9 +22,9 @@ Participa --> Solicitada : Alumno solicita acreditación
 
 Solicitada --> Validacion : Secretarío valida solicitud
 
-Validacion --> Valida : [Cumple requisitos] \t\t\t
+Validacion --> Valida : [Cumple requisitos] \t\t
 
-Validacion --> NoValida : [No cumple requisitos] \t\t\t
+Validacion --> NoValida : [No cumple requisitos] 
 
 Valida --> Acreditada : Incorporar registro al historial
 
