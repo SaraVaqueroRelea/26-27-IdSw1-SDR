@@ -1,4 +1,5 @@
-*Resumen 
+# Resumen 
+
 Se han planteado diferentes mejoras para el sistema de gestión de actividades universitarias, definiendo las funciones y permisos de los administradores, organizadores y alumnos. Se busca simplificar el panel de gestión, automatizar la asignación y validación de créditos , controlar la asistencia mediante colores y facilitar la justificación de faltas. También se propone incorporar la generación de diplomas , el cierre de actividades y el registro del estado de cada alumno.
 Por otra parte, los organizadores podrán consultar el historial de actividades anteriores sin modificarlo. 
 Finalmente, los alumnos podrán consultar sus actividades y decidir si utilizan los créditos obtenidos para convalidar asignaturas optativas o como mérito extracurricular, quedando éstos reflejados en su expediente académico.
