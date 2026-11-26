@@ -1,94 +1,153 @@
-
 @startuml
+title Diagrama de Objetos - Actividades Extracurriculares UNEATLÁNTICO
 
-object "alumno1: Alumno" as alumno1 {
-  id = "U001"
-  nombre = "Laura"
-  apellidos = "García López"
-  email = "laura@universidad.es"
-  dni = "12345678A"
-  expediente = "EXP2026"
-  grado = "Ingeniería Informática"
+skinparam objectAttributeIconSize 0
+
+' Usuarios
+object "sec1 : Secretario" as sec1 {
+  dni = "13789456A"
+  nombre = "Elena"
+  apellidos = "Gómez Ruiz"
+  correoInstitucional = "elena.gomez@uneatlantico.es"
 }
 
-object "titular1: TitularOrganizacion" as titular1 {
-  id = "T001"
+object "org1 : Organizador" as org1 {
+  dni = "72045123B"
   nombre = "Carlos"
-  apellidos = "Martínez Ruiz"
-  email = "carlos@universidad.es"
-  cargo = "Coordinador"
-  departamento = "Deportes"
+  apellidos = "Méndez Soto"
+  correoInstitucional = "carlos.mendez@uneatlantico.es"
 }
 
-object "titular2: TitularOrganizacion" as titular2 {
-  id = "T002"
-  nombre = "Ana"
-  apellidos = "Sánchez Pérez"
-  email = "ana@universidad.es"
-  cargo = "Responsable"
-  departamento = "Cultura"
+object "alu1 : Alumno" as alu1 {
+  dni = "72198345C"
+  nombre = "Lucía"
+  apellidos = "Fernández Díez"
+  correoInstitucional = "lucia.fernandez@alumnos.uneatlantico.es"
+  numeroCarnet = "20230415"
 }
 
-object "organizacion1: Organizacion" as organizacion1 {
-  id = "ORG001"
-  nombre = "Universidad Europea"
-  esExterna = false
+' Categorías
+object "catDep : Categoria" as catDep {
+  nombre = "Deportes"
+  maxCreditosValidables = 4.0
 }
 
-object "actividad1: ActividadExtraescolar" as actividad1 {
-  id = "ACT001"
-  titulo = "Torneo de fútbol"
-  descripcion = "Participación en torneo universitario"
+object "catCul : Categoria" as catCul {
+  nombre = "Cultura y Debate"
+  maxCreditosValidables = 4.0
+}
+
+' Actividades
+object "act1 : Actividad" as act1 {
+  nombre = "Equipo de Baloncesto"
+  descripcion = "Competición interuniversitaria"
+  departamento = "Servicio de Deportes"
   cursoAcademico = "2025-2026"
-  horasLectivas = 20
-  categoria = DEPORTIVAS
+  cerrada = true
 }
 
-object "actividad2: ActividadExtraescolar" as actividad2 {
-  id = "ACT002"
-  titulo = "Voluntariado social"
-  descripcion = "Colaboración en actividades solidarias"
+object "act2 : Actividad" as act2 {
+  nombre = "Liga de Debate"
+  descripcion = "Torneo académico de oratoria"
+  departamento = "Extensión Universitaria"
   cursoAcademico = "2025-2026"
-  horasLectivas = 15
-  categoria = SOLIDARIAS_Y_COOPERACION
+  cerrada = true
 }
 
-object "registro1: RegistroActividad" as registro1 {
-  id = "REG001"
-  fechaEmision = "15/06/2026"
-  rolDesempenado = "Participante"
-  horasAcreditadas = 20
-  porcentajeAsistencia = 100.0
-  creditosOtorgados = 0.5
-  certificadoUrl = "certificados/REG001.pdf"
+object "act3 : Actividad" as act3 {
+  nombre = "Club de Teatro"
+  descripcion = "Taller de artes escénicas"
+  departamento = "Extensión Universitaria"
+  cursoAcademico = "2026-2027"
+  cerrada = false
 }
 
-object "registro2: RegistroActividad" as registro2 {
-  id = "REG002"
-  fechaEmision = "20/06/2026"
-  rolDesempenado = "Voluntaria"
-  horasAcreditadas = 15
-  porcentajeAsistencia = 90.0
-  creditosOtorgados = 0.3
-  certificadoUrl = "certificados/REG002.pdf"
+' Roles de participación
+object "rolCapitan : RolParticipacion" as rolCapitan {
+  nombre = "Capitán"
+  creditos = 4.5
+  descripcionRequisitos = "Asistencia a partidos y liderazgo"
 }
 
-organizacion1 -- titular1
-organizacion1 -- titular2
+object "rolOrador : RolParticipacion" as rolOrador {
+  nombre = "Orador"
+  creditos = 2.0
+  descripcionRequisitos = "Participación en fase de grupos"
+}
 
-organizacion1 -- actividad1
-organizacion1 -- actividad2
+object "rolActor : RolParticipacion" as rolActor {
+  nombre = "Actor"
+  creditos = 2.0
+  descripcionRequisitos = "Ensayos semanales y obra final"
+}
 
-titular1 -- actividad1
-titular2 -- actividad2
+' Participaciones
+object "part1 : Participacion" as part1 {
+  creditosAsignados = 4.5
+  estado = APTO
+  codigoDiploma = "DIP-2026-0142"
+}
 
-titular1 -- registro1
-titular2 -- registro2
+object "part2 : Participacion" as part2 {
+  creditosAsignados = 2.0
+  estado = APTO
+  codigoDiploma = "DIP-2026-0289"
+}
 
-alumno1 -- registro1
-alumno1 -- registro2
+object "part3 : Participacion" as part3 {
+  creditosAsignados = 2.0
+  estado = EN_CURSO
+  codigoDiploma = null
+}
 
-actividad1 -- registro1
-actividad2 -- registro2
+' Historial y Solicitud
+object "hist1 : HistorialExtracurricular" as hist1 {
+  creditosAcumulados = 6.5
+  creditosPorCategoria = {Deportes: 4.5, Cultura y Debate: 2.0}
+  creditosValidablesPorCategoria = {Deportes: 4.0, Cultura y Debate: 2.0}
+  creditosCanjeados = 6.0
+  creditosDisponibles = 0.0
+}
+
+object "sol1 : Solicitud" as sol1 {
+  fecha = "2026-06-15"
+  tipo = CONVALIDACION_OPTATIVA
+  creditosSolicitados = 6.0
+  estado = ACEPTADA
+  observaciones = "4.0 ECTS Deportes (tope aplicado) + 2.0 ECTS Cultura"
+}
+
+' Enlaces entre objetos
+catDep -- act1 : clasifica >
+catCul -- act2 : clasifica >
+catCul -- act3 : clasifica >
+
+sec1 -- act1 : supervisa >
+sec1 -- act2 : supervisa >
+sec1 -- act3 : supervisa >
+
+org1 -- act1 : coordina >
+org1 -- act2 : coordina >
+org1 -- act3 : coordina >
+
+act1 *-- rolCapitan : define >
+act2 *-- rolOrador : define >
+act3 *-- rolActor : define >
+
+act1 *-- part1 : registra >
+act2 *-- part2 : registra >
+act3 *-- part3 : registra >
+
+rolCapitan -- part1 : aplica a >
+rolOrador -- part2 : aplica a >
+rolActor -- part3 : aplica a >
+
+alu1 *-- hist1 : posee >
+hist1 o-- part1 : acumula >
+hist1 o-- part2 : acumula >
+hist1 o-- part3 : acumula >
+
+alu1 -- sol1 : presenta >
+sec1 -- sol1 : resuelve >
 
 @enduml
