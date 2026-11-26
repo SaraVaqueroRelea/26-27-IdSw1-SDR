@@ -1,13 +1,13 @@
 @startuml
-title Diagrama de Clases - Actividades Extracurriculares UNEATLÁNTICO
+title Diagrama de Clases - Actividades Extracurriculares UNEATLÁNTICO (v5.10)
 
 skinparam classAttributeIconSize 0
 hide empty methods
 
-enum EstadoAsistencia {
-  PRESENTE
-  FALTA_JUSTIFICADA
-  FALTA_INJUSTIFICADA
+enum EstadoParticipacion {
+  APTO
+  EN_CURSO
+  NO_APTO
 }
 
 enum TipoSolicitud {
@@ -22,33 +22,58 @@ enum EstadoSolicitud {
 }
 
 abstract class Usuario {
-  # nombreCompleto : String
+  # dni : String
+  # nombre : String
+  # apellidos : String
   # correoInstitucional : String
 }
 
 class Secretario {
-  + crearActividad(actividad : Actividad, organizador : Organizador) : void
+  + crearActividad(actividad : Actividad) : void
   + eliminarActividad(actividad : Actividad) : void
+  + asignarOrganizador(actividad : Actividad, organizador : Organizador) : void
+  + cerrarActividad(actividad : Actividad) : void
+  + modificarActividadCerrada(actividad : Actividad) : void
   + resolverSolicitud(solicitud : Solicitud, aceptada : boolean) : void
 }
 
 class Organizador {
-  + anadirParticipante(actividad : Actividad, alumno : Alumno, rol : RolParticipacion) : Participacion
-  + registrarAsistencia(participacion : Participacion, fecha : Date, estado : EstadoAsistencia) : void
-  + cerrarActividad(actividad : Actividad) : void
+  + anadirMiembro(actividad : Actividad, alumno : Alumno, rol : RolParticipacion) : Participacion
+  + editarMiembro(participacion : Participacion) : void
+  + eliminarMiembro(actividad : Actividad, participacion : Participacion) : void
+  + asignarRol(participacion : Participacion, rol : RolParticipacion) : void
+  + validarRequisitos(participacion : Participacion, apto : boolean) : void
+  + exportarExcelMiembros(actividad : Actividad) : File
+  + consultarActividadesOtrosCursos(cursoAcademico : String) : List<Actividad>
 }
 
 class Alumno {
-  - expediente : String
-  - creditosDisponibles : double
-  - creditosCanjeados : double
-  + consultarHistorial() : List<Participacion>
-  + crearSolicitud(tipo : TipoSolicitud, creditos : double) : Solicitud
+  - numeroCarnet : String
+  + consultarHistorial() : HistorialExtracurricular
+  + crearSolicitud(tipo : TipoSolicitud) : Solicitud
 }
 
-class Ambito {
+class HistorialExtracurricular {
+  - /creditosAcumulados : double
+  - /creditosPorCategoria : Map<Categoria, double>
+  - /creditosValidablesPorCategoria : Map<Categoria, double>
+  - /creditosCanjeados : double
+  - /creditosDisponibles : double
+  + calcularCreditosPorCategoria(categoria : Categoria) : double
+  + calcularCreditosValidablesPorCategoria(categoria : Categoria) : double
+  + calcularCreditosValidables() : double
+  + tieneCreditos() : boolean
+  + puedeConvalidarOptativa() : boolean
+  + filtrarPorCurso(cursoAcademico : String) : List<Participacion>
+  + filtrarPorCategoria(categoria : Categoria) : List<Participacion>
+  + descontarCreditos(creditos : double) : void
+}
+
+class Categoria {
   - nombre : String
-  - maxCreditos : double
+  - maxCreditosValidables : double
+  + aplicarTope(creditos : double) : double
+  + cumpleTopeCategoria(creditos : double) : boolean
 }
 
 class Actividad {
@@ -58,30 +83,22 @@ class Actividad {
   - cursoAcademico : String
   - cerrada : boolean
   + cerrar() : void
+  + esEditablePor(usuario : Usuario) : boolean
 }
 
 class RolParticipacion {
   - nombre : String
   - creditos : double
-  - asistenciaMinima : double
-  - horasMinimas : double
-  + cumpleRequisitos(asistencia : double, horas : double) : boolean
+  - descripcionRequisitos : String
 }
 
 class Participacion {
-  - horasRealizadas : double
-  - creditosObtenidos : double
-  - superada : boolean
+  - creditosAsignados : double
+  - estado : EstadoParticipacion
   - codigoDiploma : String
-  + evaluar() : void
+  + establecerRol(rol : RolParticipacion) : void
+  + validarCumplimiento(apto : boolean) : void
   + emitirDiploma() : String
-}
-
-class Asistencia {
-  - fecha : Date
-  - estado : EstadoAsistencia
-  - justificante : String
-  + justificarFalta(justificante : String) : void
 }
 
 class Solicitud {
@@ -90,6 +107,7 @@ class Solicitud {
   - creditosSolicitados : double
   - estado : EstadoSolicitud
   - observaciones : String
+  + validarRequisitos(historial : HistorialExtracurricular) : boolean
   + aceptar() : void
   + rechazar(motivo : String) : void
 }
@@ -100,22 +118,22 @@ Usuario <|-- Organizador
 Usuario <|-- Alumno
 
 ' Asociaciones
-Ambito "1" o-- "0..*" Actividad : clasifica >
-Secretario "1.." -- "0.." Actividad : administra >
-Organizador "1" -- "0..*" Actividad : gestiona >
+Categoria "1" -- "0..*" Actividad : clasifica >
+Secretario "1..*" -- "0..*" Actividad : supervisa >
+Organizador "1" -- "0..*" Actividad : coordina >
 
-Actividad "1" -- "1.." RolParticipacion : define >
-Actividad "1" -- "0..*" Participacion : incluye >
-Alumno "1" -- "0..*" Participacion : realiza >
-RolParticipacion "1" -- "0..*" Participacion : asigna >
+Actividad "1" *-- "1..*" RolParticipacion : define >
+Actividad "1" *-- "0..*" Participacion : registra >
+RolParticipacion "1" -- "0..*" Participacion : aplica a >
 
-Participacion "1" -- "0.." Asistencia : registra >
+Alumno "1" *-- "1" HistorialExtracurricular : posee >
+HistorialExtracurricular "1" o-- "0..*" Participacion : acumula >
 
 Alumno "1" -- "0..*" Solicitud : presenta >
 Secretario "0..1" -- "0..*" Solicitud : resuelve >
 
 ' Dependencias con enumeraciones
-Asistencia ..> EstadoAsistencia
+Participacion ..> EstadoParticipacion
 Solicitud ..> TipoSolicitud
 Solicitud ..> EstadoSolicitud
 
