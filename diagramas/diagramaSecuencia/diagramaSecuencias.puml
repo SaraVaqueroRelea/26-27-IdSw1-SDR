@@ -1,10 +1,14 @@
-    participant Estudiante
-    participant Sistema
-    participant Inscripcion
-    participant Acreditacion
-    participant Secretaria
+participant Estudiante
+participant Sistema
+participant Inscripcion
+participant Acreditacion
+participant Secretaria
 
-    Estudiante -> Sistema : solicitarAcreditacion(estudiante)
+Estudiante -> Sistema : convalidarOptativa(estudiante)
+
+alt estudiante ya convalidó una optativa
+    Sistema --> Estudiante : convalidación rechazada: ya realizada anteriormente
+else primera convalidación del estudiante
     Sistema -> Sistema : total = 0, i = 0
 
     loop mientras i < inscripciones.size()
@@ -14,12 +18,10 @@
         Sistema -> Sistema : i++
     end
 
-    alt total >= 6
-        Sistema -> Acreditacion : crear(estudiante, total)
-        Acreditacion --> Sistema : retorno
-        Sistema -> Secretaria : notificarSolicitud(acreditacion)
-        Secretaria --> Sistema : retorno
-        Sistema --> Estudiante : solicitud registrada
-    else total < 6
-        Sistema --> Estudiante : faltan (6 - total) créditos
-    end
+    Sistema -> Acreditacion : crear(estudiante, total)
+    Acreditacion --> Sistema : retorno
+    Sistema -> Sistema : marcarConvalidacionRealizada(estudiante)
+    Sistema -> Secretaria : notificarSolicitud(acreditacion)
+    Secretaria --> Sistema : retorno
+    Sistema --> Estudiante : solicitud registrada
+end
