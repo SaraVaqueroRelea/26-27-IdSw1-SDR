@@ -1,6 +1,6 @@
 participant Estudiante
 participant Sistema
-participant Inscripcion
+participant Participacion
 participant Acreditacion
 participant Secretaria
 
@@ -11,9 +11,9 @@ alt estudiante ya convalidó una optativa
 else primera convalidación del estudiante
     Sistema -> Sistema : total = 0, i = 0
 
-    loop mientras i < inscripciones.size()
-        Sistema -> Inscripcion : getCreditos(i)
-        Inscripcion --> Sistema : creditos
+    loop mientras i < participaciones.size()
+        Sistema -> Participacion : getCreditos(i)
+        Participacion --> Sistema : creditos
         Sistema -> Sistema : total += creditos
         Sistema -> Sistema : i++
     end
