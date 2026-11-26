@@ -1,0 +1,121 @@
+@startuml
+title Diagrama de Objetos (Escenario 2) - Participación NO_APTO y Acreditación de Historial
+
+skinparam objectAttributeIconSize 0
+
+' Usuarios
+object "sec1 : Secretario" as sec1 {
+  dni = "13789456A"
+  nombre = "Elena"
+  apellidos = "Gómez Ruiz"
+  correoInstitucional = "elena.gomez@uneatlantico.es"
+}
+
+object "org2 : Organizador" as org2 {
+  dni = "72098765D"
+  nombre = "Marta"
+  apellidos = "Sánchez Blanco"
+  correoInstitucional = "marta.sanchez@uneatlantico.es"
+}
+
+object "alu2 : Alumno" as alu2 {
+  dni = "72345678E"
+  nombre = "Javier"
+  apellidos = "Ortega Castro"
+  correoInstitucional = "javier.ortega@alumnos.uneatlantico.es"
+  numeroCarnet = "20240892"
+}
+
+' Categoría
+object "catSol : Categoria" as catSol {
+  nombre = "Solidaridad y Cooperación"
+  maxCreditosValidables = 4.0
+}
+
+' Actividades
+object "act4 : Actividad" as act4 {
+  nombre = "Voluntariado Banco de Alimentos"
+  descripcion = "Campaña anual de recogida"
+  departamento = "Acción Social"
+  cursoAcademico = "2025-2026"
+  cerrada = true
+}
+
+object "act5 : Actividad" as act5 {
+  nombre = "Programa Mentor"
+  descripcion = "Acompañamiento a alumnos de nuevo ingreso"
+  departamento = "Orientación Universitaria"
+  cursoAcademico = "2025-2026"
+  cerrada = true
+}
+
+' Roles de participación
+object "rolVol : RolParticipacion" as rolVol {
+  nombre = "Voluntario"
+  creditos = 1.5
+  descripcionRequisitos = "Completar jornadas asignadas"
+}
+
+object "rolMen : RolParticipacion" as rolMen {
+  nombre = "Mentor"
+  creditos = 2.5
+  descripcionRequisitos = "Seguimiento trimestral y memoria final"
+}
+
+' Participaciones
+object "part4 : Participacion" as part4 {
+  creditosAsignados = 1.5
+  estado = NO_APTO
+  codigoDiploma = null
+}
+
+object "part5 : Participacion" as part5 {
+  creditosAsignados = 2.5
+  estado = APTO
+  codigoDiploma = "DIP-2026-0411"
+}
+
+' Historial y Solicitud
+object "hist2 : HistorialExtracurricular" as hist2 {
+  creditosAcumulados = 2.5
+  creditosPorCategoria = {Solidaridad y Cooperación: 2.5}
+  creditosValidablesPorCategoria = {Solidaridad y Cooperación: 2.5}
+  creditosCanjeados = 0.0
+  creditosDisponibles = 2.5
+}
+
+object "sol2 : Solicitud" as sol2 {
+  fecha = "2026-06-20"
+  tipo = ACREDITACION_HISTORIAL
+  creditosSolicitados = 2.5
+  estado = ACEPTADA
+  observaciones = "Certificación de méritos en expediente académico"
+}
+
+' Enlaces entre objetos
+catSol -- act4 : clasifica >
+catSol -- act5 : clasifica >
+
+sec1 -- act4 : supervisa >
+sec1 -- act5 : supervisa >
+
+org2 -- act4 : coordina >
+org2 -- act5 : coordina >
+
+act4 *-- rolVol : define >
+act5 *-- rolMen : define >
+
+act4 *-- part4 : registra >
+act5 *-- part5 : registra >
+
+rolVol -- part4 : aplica a >
+rolMen -- part5 : aplica a >
+
+alu2 *-- hist2 : posee >
+hist2 o-- part4 : acumula >
+hist2 o-- part5 : acumula >
+
+alu2 -- sol2 : presenta >
+sec1 -- sol2 : resuelve >
+
+@enduml
