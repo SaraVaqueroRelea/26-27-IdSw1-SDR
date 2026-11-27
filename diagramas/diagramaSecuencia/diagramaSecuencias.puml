@@ -1,27 +1,68 @@
-participant Estudiante
-participant Sistema
-participant Participacion
-participant Acreditacion
-participant Secretaria
+@startuml
+title Diagrama de Secuencia 1 - Inscripción de Alumno y Validación de Requisitos
 
-Estudiante -> Sistema : convalidarOptativa(estudiante)
+skinparam sequenceMessageAlign center
 
-alt estudiante ya convalidó una optativa
-    Sistema --> Estudiante : convalidación rechazada: ya realizada anteriormente
-else primera convalidación del estudiante
-    Sistema -> Sistema : total = 0, i = 0
+actor Organizador as org
+participant "act : Actividad" as act
+participant "rol : RolParticipacion" as rol
+participant "part : Participacion" as part
+participant "hist : HistorialExtracurricular" as hist
 
-    loop mientras i < participaciones.size()
-        Sistema -> Participacion : getCreditos(i)
-        Participacion --> Sistema : creditos
-        Sistema -> Sistema : total += creditos
-        Sistema -> Sistema : i++
-    end
+== Fase 1: Alta de participante y asignación de rol ==
 
-    Sistema -> Acreditacion : solicitud(estudiante, total)
-    Acreditacion --> Sistema : retorno
-    Sistema -> Secretaria : notificarSolicitud(acreditacion)
-    Secretaria --> Sistema : retorno
-    Sistema -> Sistema : marcarConvalidacionRealizada(estudiante)
-    Sistema --> Estudiante : registrarCreditos
+org -> act : esEditablePor(org)
+activate act
+act --> org : editable
+deactivate act
+
+alt editable == true
+  org -> part ** : crearParticipacion(alu, rol)
+  activate part
+  part -> part : establecerRol(rol)
+  activate part
+  part -> rol : obtenerCreditos()
+  activate rol
+  rol --> part : creditos
+  deactivate rol
+  part -> part : creditosAsignados = creditos\nestado = EN_CURSO
+  deactivate part
+
+  part -> hist : asociarParticipacion(part)
+  activate hist
+  hist --> part : ok
+  deactivate hist
+
+  part --> org : part
+  deactivate part
+else editable == false
+  org --> org : denegar operación (actividad cerrada o curso anterior)
 end
+
+== Fase 2: Validación de cumplimiento al finalizar la actividad ==
+
+org -> act : esEditablePor(org)
+activate act
+act --> org : editable
+deactivate act
+
+alt editable == true
+  org -> part : validarCumplimiento(apto)
+  activate part
+
+  alt apto == true
+    part -> part : estado = APTO
+    part -> part : emitirDiploma()
+    activate part
+    part --> part : codigoDiploma
+    deactivate part
+    part --> org : participación marcada como APTO y diploma generado
+  else apto == false
+    part -> part : estado = NO_APTO\ncodigoDiploma = null
+    part --> org : participación marcada como NO_APTO
+  end
+
+  deactivate part
+end
+
+@enduml
