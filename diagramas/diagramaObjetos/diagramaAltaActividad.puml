@@ -1,0 +1,60 @@
+@startuml
+title Momento 1 - Alta de Actividad e Inscripción Inicial
+
+skinparam objectAttributeIconSize 0
+
+object "sec1 : Secretario" as sec1 {
+  dni = "13789456A"
+  nombre = "Elena"
+  apellidos = "Gómez Ruiz"
+  correoInstitucional = "elena.gomez@uneatlantico.es"
+}
+
+object "org1 : Organizador" as org1 {
+  dni = "72045123B"
+  nombre = "Carlos"
+  apellidos = "Méndez Soto"
+  correoInstitucional = "carlos.mendez@uneatlantico.es"
+}
+
+object "cat1 : Categoria" as cat1 {
+  nombre = "Deportes"
+  maxCreditosValidables = 4.0
+}
+
+object "act1 : Actividad" as act1 {
+  nombre = "Equipo de Baloncesto"
+  descripcion = "Competición interuniversitaria"
+  departamento = "Servicio de Deportes"
+  cursoAcademico = "2025-2026"
+  cerrada = false
+}
+
+object "rol1 : RolParticipacion" as rol1 {
+  nombre = "Capitán"
+  creditos = 4.5
+  descripcionRequisitos = "Asistencia a partidos y liderazgo"
+}
+
+object "alu1 : Alumno" as alu1 {
+  dni = "72198345C"
+  nombre = "Lucía"
+  apellidos = "Fernández Díez"
+  correoInstitucional = "lucia.fernandez@alumnos.uneatlantico.es"
+  numeroCarnet = "20230415"
+}
+
+object "part1 : Participacion" as part1 {
+  creditosAsignados = 4.5
+  estado = EN_CURSO
+  codigoDiploma = null
+}
+
+cat1 -- act1 : clasifica >
+sec1 -- act1 : supervisa >
+org1 -- act1 : coordina >
+act1 *-- rol1 : define >
+act1 *-- part1 : registra >
+rol1 -- part1 : aplica a >
+
+@enduml
