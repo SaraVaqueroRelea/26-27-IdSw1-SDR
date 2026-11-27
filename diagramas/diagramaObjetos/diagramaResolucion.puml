@@ -1,0 +1,41 @@
+@startuml
+title Momento 3 - Resolución de Solicitud de Convalidación
+
+skinparam objectAttributeIconSize 0
+
+object "alu1 : Alumno" as alu1 {
+  dni = "72198345C"
+  nombre = "Lucía"
+  apellidos = "Fernández Díez"
+  correoInstitucional = "lucia.fernandez@alumnos.uneatlantico.es"
+  numeroCarnet = "20230415"
+}
+
+object "hist1 : HistorialExtracurricular" as hist1 {
+  creditosAcumulados = 6.5
+  creditosPorCategoria = {Deportes: 4.5, Cultura y Debate: 2.0}
+  creditosValidablesPorCategoria = {Deportes: 4.0, Cultura y Debate: 2.0}
+  creditosCanjeados = 6.0
+  creditosDisponibles = 0.0
+}
+
+object "sol1 : Solicitud" as sol1 {
+  fecha = "2026-06-15"
+  tipo = CONVALIDACION_OPTATIVA
+  creditosSolicitados = 6.0
+  estado = ACEPTADA
+  observaciones = "4.0 ECTS Deportes + 2.0 ECTS Cultura"
+}
+
+object "sec1 : Secretario" as sec1 {
+  dni = "13789456A"
+  nombre = "Elena"
+  apellidos = "Gómez Ruiz"
+  correoInstitucional = "elena.gomez@uneatlantico.es"
+}
+
+alu1 *-- hist1 : posee >
+alu1 -- sol1 : presenta >
+sec1 -- sol1 : resuelve >
+
+@enduml
