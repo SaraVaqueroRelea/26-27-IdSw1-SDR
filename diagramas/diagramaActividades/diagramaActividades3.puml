@@ -1,0 +1,75 @@
+@startuml
+title Diagrama de actividades - Gestión de actividades extracurriculares
+
+|Secretario|
+|Organizador|
+|Sistema|
+|Alumno|
+
+|Secretario|
+start
+:Crear actividad;
+:Asignar organizador;
+
+|Organizador|
+:Gestionar la actividad;
+:Añadir alumnos participantes;
+:Editar información de los alumnos;
+:Asignar roles;
+:Controlar las asistencias de los alumnos;
+:Validar requisitos de participación;
+
+|Sistema|
+if (¿Alumno apto?) then (Sí)
+    :Asociar créditos según rol;
+    :Emitir diploma;
+else (No)
+    :Marcar participación como no apta;
+endif
+:Almacenar información en la base de datos;
+:Actualizar historial extracurricular;
+
+|Secretario|
+:Cerrar actividad;
+
+|Alumno|
+:Consultar historial extracurricular;
+
+if (¿Solicita reconocimiento de créditos?) then (Sí)
+    :Crear solicitud;
+
+    if (¿Tipo de solicitud?) then (Acreditación historial)
+        :Presentar documentación justificativa;
+
+        |Secretario|
+        :Revisar documentación;
+        :Registrar actividades externas;
+    else (Convalidación optativa)
+    endif
+
+    |Sistema|
+    :Validar requisitos de la solicitud;
+    :Calcular créditos por categoría;
+    :Aplicar topes por categoría;
+
+    |Secretario|
+    :Resolver solicitud;
+
+    if (¿Aceptada?) then (Sí)
+        :Registrar créditos;
+        |Sistema|
+        :Aceptar solicitud;
+        :Descontar créditos canjeados;
+        :Registrar reconocimiento en el expediente;
+    else (No)
+        |Sistema|
+        :Rechazar solicitud con motivo;
+    endif
+
+else (No)
+    |Sistema|
+    :Conservar historial actualizado;
+endif
+
+stop
+@enduml
