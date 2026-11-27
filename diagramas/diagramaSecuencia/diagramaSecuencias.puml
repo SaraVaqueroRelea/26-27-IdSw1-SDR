@@ -18,10 +18,10 @@ else primera convalidación del estudiante
         Sistema -> Sistema : i++
     end
 
-    Sistema -> Acreditacion : crear(estudiante, total)
+    Sistema -> Acreditacion : solicitud(estudiante, total)
     Acreditacion --> Sistema : retorno
-    Sistema -> Sistema : marcarConvalidacionRealizada(estudiante)
     Sistema -> Secretaria : notificarSolicitud(acreditacion)
     Secretaria --> Sistema : retorno
-    Sistema --> Estudiante : solicitud registrada
+    Sistema -> Sistema : marcarConvalidacionRealizada(estudiante)
+    Sistema --> Estudiante : registrarCreditos
 end
