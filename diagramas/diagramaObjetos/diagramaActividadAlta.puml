@@ -36,13 +36,6 @@ object "rol1 : RolParticipacion" as rol1 {
   descripcionRequisitos = "Asistencia a partidos y liderazgo"
 }
 
-object "alu1 : Alumno" as alu1 {
-  dni = "72198345C"
-  nombre = "Lucía"
-  apellidos = "Fernández Díez"
-  correoInstitucional = "lucia.fernandez@alumnos.uneatlantico.es"
-  numeroCarnet = "20230415"
-}
 
 object "part1 : Participacion" as part1 {
   creditosAsignados = 4.5
