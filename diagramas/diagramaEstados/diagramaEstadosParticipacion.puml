@@ -1,0 +1,26 @@
+@startuml
+title Diagrama de Estados - Participacion
+
+hide empty description
+skinparam shadowing false
+
+[*] --> EnCurso : Organizador añade alumno a la actividad
+
+state "Actividad en curso" as EnCurso
+state "Alumno apto" as Apto
+state "Alumno no apto" as NoApto
+
+EnCurso --> EnCurso : Organizador edita miembro \t\t
+
+EnCurso --> EnCurso : Organizador asigna rol de participación 
+
+EnCurso --> Apto 
+
+EnCurso --> NoApto 
+Apto --> Apto : Emitir diploma
+
+EnCurso --> [*] : Organizador elimina miembro \t\t\t 
+Apto --> [*] : Organizador elimina miembro \t\t
+NoApto --> [*] : Organizador elimina miembro \t\t\t
+
+@enduml

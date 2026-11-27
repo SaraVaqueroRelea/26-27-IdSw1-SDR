@@ -1,0 +1,21 @@
+@startuml
+title Diagrama de Estados - Actividad
+
+hide empty description
+skinparam shadowing false
+
+[*] --> Abierta : Secretario crea actividad
+
+state "Actividad abierta" as Abierta
+state "Actividad cerrada" as Cerrada
+
+Abierta --> Abierta : Secretario asigna organizador
+
+Abierta --> Cerrada : Secretario cierra actividad 
+
+Cerrada --> Cerrada : Secretario modifica actividad cerrada
+
+Abierta --> [*] : Secretario elimina actividad \t\t\t
+Cerrada --> [*] : Secretario elimina actividad \t\t\t
+
+@enduml
