@@ -1,33 +1,36 @@
-# Sesiones de requisitado
+# Sistema de Gestión de Actividades Extracurriculares — UNEATLÁNTICO
 
-Este es el repositorio de las sesiones de requisitado de la asignatura de Ingeniería del Software I de UNEATLANTICO.
+Plataforma web para administrar el catálogo de actividades extracurriculares, evaluar la participación del alumnado, emitir diplomas y gestionar el reconocimiento académico de créditos ECTS.
 
-Se desarrolla, en un caso real, la disciplina de requisitado, que es la puerta de entrada al desarrollo de una solución basada en software. 
+---
 
-<div align=center>
+## Perfiles y Responsabilidades
 
-| |Grupo|Estadísticas|Entrega oficial|
-|-|-|:-:|:-:|
+| Rol | Funciones principales |
+| :--- | :--- |
+| **Secretario** | • Crea, edita y elimina actividades.<br>• Asigna el organizador responsable a cada actividad.<br>• Cierra actas (bloqueando edición) y realiza correcciones excepcionales.<br>• Consulta historiales y resuelve solicitudes (`ACEPTADA` / `RECHAZADA`). |
+| **Organizador** | • Inscribe, edita y da de baja alumnos en actividades abiertas.<br>• Asigna el rol de participación (calcula los créditos automáticamente).<br>• Evalúa el cumplimiento final como `APTO` o `NO_APTO`.<br>• Exporta listados a Excel y consulta cursos anteriores en modo solo lectura. |
+| **Alumno** | • Consulta su historial extracurricular y el desglose de créditos.<br>• Descarga diplomas de actividades superadas (`APTO`).<br>• Presenta solicitudes de acreditación o convalidación de optativa. |
 
+---
 
-</div>
+## Reglas de Negocio Clave
 
-> Se ha demostrado, empírica y académicamente, que un porcentaje no menor de proyectos de software que fracasan lo hacen porque está mal llevada esta fase.
+### 1. Evaluación y Créditos
+* **Sin control de asistencia:** La evaluación se basa exclusivamente en cumplir los requisitos del rol asignado (`EN_CURSO` $\rightarrow$ `APTO` o `NO_APTO`).
+* **Créditos por rol:** Cada actividad define sus propios roles (ej. *Participante*, *Capitán*, *Orador*) con una carga de ECTS y requisitos específicos.
+* **Emisión de diplomas:** Solo se genera código de diploma y se habilita su descarga cuando la participación es `APTO`.
 
-<div align=center>
+### 2. Cálculo del Historial y Topes
+* **Límite por categoría:** Cada categoría normativa establece un máximo de créditos validables; si un alumno supera ese tope en una misma categoría, el excedente no computa para convalidación.
+* **Cálculo dinámico:** El historial muestra en tiempo real los créditos **acumulados**, **validables** (tras aplicar topes), **canjeados** y **disponibles**.
 
-||
-|-|
-![](https://raw.githubusercontent.com/mmasias/23-24-IdSw1-SDR/main/imagenes/modelosUML/trabajoRepos.svg)
+### 3. Solicitudes del Alumno
 
-</div>
+| Tipo de Solicitud | Requisito mínimo | Efecto al aprobarse |
+| :--- | :--- | :--- |
+| **Acreditación de Historial** | Tener más de **0 ECTS** acumulados. | Emite certificado oficial sin descontar créditos del saldo. |
+| **Convalidación de Optativa** | Disponer de al menos **6.0 ECTS validables**. | Canjea y descuenta **6.0 ECTS** del saldo disponible. |
 
-## Algunas reglas
-
-- Reuniones oficiales (en horas de clase)
-  - A estas debe asistir el 100% de los integrantes de los grupos.
-  - Si a las reuniones asiste menos del 80% del grupo, la reunión se cancela y el grupo se da por cerrado. La evaluación se realiza de la forma tradicional (examen parcial, examen final).
-- Reuniones extra: de acuerdo a lo pautado con el cliente.
-- Se recomienda utilizar el repo del coordinador del grupo y las herramientas de GitHub para gestionar las reuniones y comunicaciones con el cliente, haciendo racional uso de la trazabilidad.
-- Las imágenes, en la medida de lo posible en formato plantUML. 
-  - Todas las fuentes en la carpeta modelosUML y las imágenes exportadas, en formato svg.# 26-27-IdSw1-SDR
+### 4. Control de Edición
+* Una vez que **Secretaría cierra una actividad**, el organizador pasa a modo **solo lectura**; únicamente Secretaría puede modificar datos de forma excepcional.
