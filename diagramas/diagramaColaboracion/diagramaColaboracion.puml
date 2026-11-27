@@ -1,63 +1,77 @@
+
 @startuml
-allowmixing
+title Diagrama de colaboración - Actividades Extracurriculares UNEATLÁNTICO (v5.10)
 
-title Gestión de actividades extracurriculares
-left to right direction
-
-' CONFIGURACIÓN VISUAL
-skinparam linetype ortho
 skinparam shadowing false
-skinparam nodesep 90
-skinparam ranksep 110
-skinparam defaultFontSize 14
-skinparam ArrowFontSize 13
-skinparam object {
-  BackgroundColor #EAF2F8
-  BorderColor #2471A3
-}
+skinparam objectBackgroundColor #F4F7FA
+skinparam objectBorderColor #34465B
+skinparam ArrowColor #34465B
+skinparam defaultFontName SansSerif
+skinparam nodesep 65
+skinparam ranksep 90
 
-' ACTORES
-actor "Titular" as AT
-actor "Alumno" as AA
+' Objetos del sistema
+object "secretario : Secretario" as S
+object "organizador : Organizador" as O
+object "alumno : Alumno" as A
+object "actividad : Actividad" as V
+object "participacion : Participacion" as P
+object "rol : RolParticipacion" as R
+object "historial : HistorialExtracurricular" as H
+object "categoria : Categoria" as C
+object "solicitud : Solicitud" as Q
 
-' OBJETOS
-object "titular:TitularOrganizacion" as T
-object "registro:RegistroActividad" as R
-object "actividad:ActividadExtraescolar" as AC
-object "alumno:Alumno" as A
-object "organizacion:Organizacion" as O
+' Operaciones principales del secretario
+S --> S : 1: crearActividad(actividad)\n2: asignarOrganizador(actividad, organizador)\n6: cerrarActividad(actividad)\n9: resolverSolicitud(solicitud, aceptada)
 
-' REGISTRO Y ACREDITACIÓN
-AT -right-> T : 1, 2
-T -right-> R : 2.1
-R -right-> AC : 2.2
+' Operaciones principales del organizador
+O --> O : 3: anadirMiembro(actividad, alumno, rol)\n4: asignarRol(participacion, rol)\n5: validarRequisitos(participacion, apto)
 
-' ASOCIACIÓN AL HISTORIAL
-T -down-> A : 2.3
+' Operaciones principales del alumno
+A --> A : 7: consultarHistorial()\n8: crearSolicitud(tipo)
 
-' CONSULTAS DEL ALUMNO
-AA -right-> A : 3, 4
-A -right-> R : 3.1, 4.1
+' Gestión de actividades
+S --> V : 6.1: cerrar()
 
-' ORGANIZACIÓN QUE OFRECE ACTIVIDADES
-O -up- AC : ofrece
+O --> V : 3.1: esEditablePor(organizador)
 
-' DESCRIPCIÓN DE LOS MENSAJES
+' Gestión de participaciones
+O --> P : 3.2 [editable]: «create»\n4.1: establecerRol(rol)\n5.1: validarCumplimiento(apto)\n5.2 [apto]: emitirDiploma()
+
+' Relaciones entre objetos
+P -- R : rol asignado
+V -- R : define
+V -- P : registra
+V -- C : clasificada en
+H -- P : acumula
+A -- H : posee
+
+' Creación de solicitudes
+A --> Q : 8.1: «create» (PENDIENTE)
+
+' Resolución de solicitudes
+S --> Q : 9.1: validarRequisitos(historial)\n9.2a [válida y aceptada]: aceptar()\n9.2b [en otro caso]: rechazar(motivo)
+
+' Comprobación de requisitos
+Q --> H : 9.1.1a [convalidación]: puedeConvalidarOptativa()\n9.1.1b [acreditación]: tieneCreditos()
+
+' Cálculo de créditos
+H --> H : 9.1.1a.1: calcularCreditosValidables()\n9.1.1a.1.1 *[por categoría]: calcularCreditosValidablesPorCategoria(categoria)\n9.1.1a.1.1.1: calcularCreditosPorCategoria(categoria)
+
+' Aplicación de límites por categoría
+H --> C : 9.1.1a.1.1.2: aplicarTope(creditos)
+
+' Canje de créditos
+S --> H : 9.3 [aceptada y convalidación]: descontarCreditos(creditosSolicitados)
+
 legend bottom
-  <b>MENSAJES DE COLABORACIÓN</b>
-
-  1     registrarActividad(actividad)
-  2     cargarAcreditacionAlumno(...)
-  2.1   crear RegistroActividad
-  2.2   consultar categoría y curso de la actividad
-  2.3   asociar registro al historial del alumno
-  3     consultarHistorialFiltrado(curso, categoria)
-  3.1   obtenerCategoria() / obtenerCursoAcademico()
-  4     calcularECTSPorCategoria(categoria)
-  4.1   consultar creditosOtorgados
-
-  <b>Validación interna:</b>
-  RegistroActividad.validarRequisitosReglamento()
+  Mensajes 1–9: escenario integrado propuesto.
+  Las autollamadas representan operaciones de entrada.
+  Las guardas [ ] representan condiciones.
+  * indica repetición.
+  «create» indica creación de instancia.
+  Los enlaces sin numeración representan relaciones estructurales.
+  Las reglas de emisión, validación y canje deben confirmarse.
 endlegend
 
 @enduml
