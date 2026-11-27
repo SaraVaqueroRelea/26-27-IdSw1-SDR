@@ -1,0 +1,68 @@
+@startuml
+title Diagrama de Actividad 2 - Consulta de Historial y Solicitud de Créditos
+
+|Alumno|
+start
+:Acceder al historial extracurricular;
+
+|Sistema|
+:Recuperar participaciones del alumno;
+:Sumar créditos de participaciones en estado APTO;
+:Agrupar créditos por categoría y aplicar tope máximo;
+:Calcular saldo disponible (validables - canjeados);
+
+|Alumno|
+:Visualizar desglose por categoría y saldo disponible;
+
+if (¿Desea descargar algún diploma?) then (Sí)
+  if (¿Participación en estado APTO?) then (Sí)
+    |Sistema|
+    :Generar y descargar diploma acreditativo;
+  else (No)
+    |Sistema|
+    :Denegar descarga (actividad en curso o no apta);
+  endif
+  |Alumno|
+else (No)
+endif
+
+if (¿Desea presentar una solicitud?) then (Sí)
+  :Seleccionar tipo de solicitud;
+  if (¿Tipo de solicitud?) then (ACREDITACION_HISTORIAL)
+    |Sistema|
+    if (¿Tiene créditos acumulados > 0?) then (Sí)
+      :Registrar solicitud en estado PENDIENTE;
+    else (No)
+      :Rechazar creación por falta de créditos;
+      stop
+    endif
+  else (CONVALIDACION_OPTATIVA)
+    |Sistema|
+    if (¿Créditos disponibles >= 6.0 ECTS?) then (Sí)
+      :Registrar solicitud en estado PENDIENTE;
+    else (No)
+      :Rechazar creación (créditos validables insuficientes);
+      stop
+    endif
+  endif
+
+  |Secretario|
+  :Revisar solicitud y expediente del alumno;
+  if (¿Solicitud conforme?) then (Sí)
+    :Aceptar solicitud;
+    |Sistema|
+    :Cambiar estado a ACEPTADA;
+    if (¿Es convalidación de optativa?) then (Sí)
+      :Descontar 6.0 ECTS de créditos disponibles;
+    else (No)
+    endif
+  else (No)
+    :Rechazar solicitud indicando observaciones;
+    |Sistema|
+    :Cambiar estado a RECHAZADA;
+  endif
+else (No)
+endif
+
+stop
+@enduml
