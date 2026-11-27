@@ -1,0 +1,46 @@
+@startuml
+title Diagrama de Estados - Solicitud de Acreditacion
+
+hide empty description
+
+[*] --> NoCreada
+
+state "Actividad no creada" as NoCreada
+state "Actividad creada" as Creada
+state "Actividad abierta" as Abierta
+state "Añaden al alumno" as Añadir
+state "Alumno realiza la actividad" as Participa
+state "Acreditación solicitada" as Solicitada
+state "A validar por organizador" as Validacion
+state "Acreditación válida" as Valida
+state "Acreditación no válida" as NoValida
+state "Incorporar creditos" as Acreditada
+
+NoCreada --> Creada : Organizador registra actividad
+
+Creada --> Abierta
+
+Abierta --> Añadir: Alumno se inscribe en actividad
+
+Añadir --> Participa
+
+Participa --> Solicitada : Alumno solicita acreditación
+
+Solicitada --> Validacion : Secretario valida solicitud
+
+Validacion --> Valida : [Cumple requisitos]\t\t\t
+
+Validacion --> NoValida : [No cumple requisitos]\t\t\t
+
+Valida --> Acreditada : Incorporar registro al historial
+
+NoValida --> [*] : Acreditación no reconocida
+Acreditada --> [*]
+
+note right of Creada
+La actividad es gestionada por el organizador 
+y administrada por secretaría.
+Pertenece a un departamento. 
+end note
+
+@enduml
