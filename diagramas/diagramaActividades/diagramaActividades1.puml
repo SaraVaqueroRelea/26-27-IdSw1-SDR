@@ -1,0 +1,49 @@
+
+@startuml
+title Diagrama de actividades - Gestión de actividades extracurriculares
+
+|Departamento responsable|
+start
+:Organizar actividad extracurricular;
+:Acceder a la plataforma;
+:Registrar los datos de la actividad;
+:Introducir estudiantes participantes;
+:Indicar el rol de cada estudiante;
+
+|Sistema|
+:Almacenar información en la base de datos;
+:Actualizar historial extracurricular;
+:Asociar créditos según actividad y rol;
+
+|Estudiante|
+:Consultar historial extracurricular;
+
+if (¿Solicita reconocimiento de créditos?) then (Sí)
+    :Presentar solicitud a Administración;
+
+    if (¿Tiene actividades externas?) then (Sí)
+        :Presentar documentación justificativa;
+
+        |Administración / Secretaría|
+        :Revisar documentación;
+        :Registrar actividades externas;
+    else (No)
+    endif
+
+    |Administración / Secretaría|
+    :Consultar historial del estudiante;
+    :Comprobar actividades y créditos acumulados;
+    :Aplicar límites y reglas por categorías;
+    :Validar reconocimiento de créditos;
+    :Generar resolución;
+    
+    |Sistema|
+    :Registrar reconocimiento en el expediente;
+
+else (No)
+    |Sistema|
+    :Conservar historial actualizado;
+endif
+
+stop
+@enduml
