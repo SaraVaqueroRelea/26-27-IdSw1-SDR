@@ -1,0 +1,54 @@
+@startuml
+title Momento 2 - Evaluación Favorable y Aplicación de Tope por Categoría
+
+skinparam objectAttributeIconSize 0
+
+object "org1 : Organizador" as org1 {
+  dni = "72045123B"
+  nombre = "Carlos"
+  apellidos = "Méndez Soto"
+  correoInstitucional = "carlos.mendez@uneatlantico.es"
+}
+
+object "cat1 : Categoria" as cat1 {
+  nombre = "Deportes"
+  maxCreditosValidables = 4.0
+}
+
+object "act1 : Actividad" as act1 {
+  nombre = "Equipo de Baloncesto"
+  descripcion = "Competición interuniversitaria"
+  departamento = "Servicio de Deportes"
+  cursoAcademico = "2025-2026"
+  cerrada = true
+}
+
+object "part1 : Participacion" as part1 {
+  creditosAsignados = 4.5
+  estado = APTO
+  codigoDiploma = "DIP-2026-0142"
+}
+
+object "alu1 : Alumno" as alu1 {
+  dni = "72198345C"
+  nombre = "Lucía"
+  apellidos = "Fernández Díez"
+  correoInstitucional = "lucia.fernandez@alumnos.uneatlantico.es"
+  numeroCarnet = "20230415"
+}
+
+object "hist1 : HistorialExtracurricular" as hist1 {
+  creditosAcumulados = 4.5
+  creditosPorCategoria = {Deportes: 4.5}
+  creditosValidablesPorCategoria = {Deportes: 4.0}
+  creditosCanjeados = 0.0
+  creditosDisponibles = 4.0
+}
+
+cat1 -- act1 : clasifica >
+org1 -- act1 : coordina >
+act1 *-- part1 : registra >
+alu1 *-- hist1 : posee >
+hist1 o-- part1 : acumula >
+
+@enduml
